@@ -44,5 +44,5 @@ CMD ["npx", "nodemon", "index.js"]
 
 #  Montamos los archivos
 # docker run --rm -p 3000:3000 -v $(pwd):/usr/src platziapp
-# /Borrar todos los contenedores 
+# /Borrar todos los contenedores
 # docker rm -f  $(docker ps -aq)
