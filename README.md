@@ -131,3 +131,95 @@ Stopping docker_db_1  ... done
 Removing docker_app_1 ... done
 Removing docker_db_1  ... done
 ```
+# Docker-compose como herramienta de desarrollo de sofware
+Trabajar como si estuviera trabajando nativo
+**build**: Docker es inteligente y si en ese contexto de build encuentra un Dockerfile lo va a usar
+```
+version: "3"
+
+services:
+  app:
+    build: .
+    environment:
+      MONGO_URL: "mongodb://db:27017/test"
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+
+  db:
+    image: mongo
+```
+**hacer un flow**
+```
+docker-compose logs -f app
+```
+```
+app_1  | [nodemon] 1.18.6
+app_1  | [nodemon] to restart at any time, enter `rs`
+app_1  | [nodemon] watching: *.*
+app_1  | [nodemon] starting `node index.js`
+app_1  | Server listening on port 3000!
+app_1  | [nodemon] 1.18.6
+app_1  | [nodemon] to restart at any time, enter `rs`
+app_1  | [nodemon] watching: *.*
+app_1  | [nodemon] starting `node index.js`
+app_1  | Server listening on port 3000!
+```
+```
+    volumes:
+      # donde estamos: a donde queremos ir
+      # Lo que queremos que sobre escriba
+      - .:/usr/src
+      # lo que queremos que no sobre escriba
+      - /usr/src/node_modules
+
+```
+**un servicio es uno o mas contenedores**
+### SIMULAR UN SERVICIO DE MULTIPLES CONTENEDORES CLUSTER
+
+```
+docker-compose ps
+```
+```
+    Name                  Command               State           Ports
+------------------------------------------------------------------------------
+docker_app_1   docker-entrypoint.sh npx n ...   Up      0.0.0.0:3000->3000/tcp
+docker_db_1    docker-entrypoint.sh mongod      Up      27017/tcp
+```
+```
+docker-compose scale app=4
+WARNING: The scale command is deprecated. Use the up command with the --scale flag instead.
+WARNING: The "app" service specifies a port on the host. If multiple containers for this service are created on a single host, the port will clash.
+Starting docker_app_1 ... done
+Creating docker_app_2 ... error
+Creating docker_app_3 ... error
+Creating docker_app_4 ... error
+
+ERROR: for docker_app_4  Cannot start service app: driver failed programming external connectivity on endpoint docker_app_4 (c0e7f94c5d8f6bbff4d6ed47ad620809fa5fcd397afc206fafc7d167a2fb8a8e): Bind for 0.0.0.0:3000 failed: port is already allocated
+
+ERROR: for docker_app_3  Cannot start service app: driver failed programming external connectivity on endpoint docker_app_3 (4acfc8eb10b4794aa1b40326767c046453d02a6fd636e73ffe60dce2633fce3d): Bind for 0.0.0.0:3000 failed: port is already allocated
+
+ERROR: for docker_app_2  Cannot start service app: driver failed programming external connectivity on endpoint docker_app_2 (0d72167990e7fcf5a088b7d78ef585eff87d6da71b6e3b7e166e34a653daf42a): Bind for 0.0.0.0:3000 failed: port is already allocated
+ERROR: Cannot start service app: driver failed programming external connectivity on endpoint docker_app_4 (c0e7f94c5d8f6bbff4d6ed47ad620809fa5fcd397afc206fafc7d167a2fb8a8e): Bind for 0.0.0.0:3000 failed: port is already allocated
+```
+- **PASA QUE EN NUESTRO PUERTO 3000 YA ESTA OCUPADO ENTOONCWES LO QUE HAGO ES ASIGNAR UN RANGO DE PUERTO ***
+```
+  ports:
+      - "3000-3010:3000"
+ ```
+```
+Starting docker_app_1 ... done
+Creating docker_app_2 ... done
+Creating docker_app_3 ... done
+Creating docker_app_4 ... done
+```
+```
+    Name                  Command               State           Ports
+------------------------------------------------------------------------------
+docker_app_1   docker-entrypoint.sh npx n ...   Up      0.0.0.0:3000->3000/tcp
+docker_app_2   docker-entrypoint.sh npx n ...   Up      0.0.0.0:3003->3000/tcp
+docker_app_3   docker-entrypoint.sh npx n ...   Up      0.0.0.0:3002->3000/tcp
+docker_app_4   docker-entrypoint.sh npx n ...   Up      0.0.0.0:3001->3000/tcp
+docker_db_1    docker-entrypoint.sh mongod      Up      27017/tcp
+```

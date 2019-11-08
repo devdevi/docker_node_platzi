@@ -2,13 +2,21 @@ version: "3"
 
 services:
   app:
-    image: platziapp
+    # image: platziappd
+    build: .
     environment:
       MONGO_URL: "mongodb://db:27017/test"
     depends_on:
       - db
     ports:
-      - "3000:3000"
+      - "3000-3004:3000"
+    #  Compartir sistema de archivos bind
+    volumes:
+      # donde estamos: a donde queremos ir
+      # Lo que queremos que sobre escriba
+      - .:/usr/src
+      # lo que queremos que no sobre escriba
+      - /usr/src/node_modules
 
   db:
     image: mongo
