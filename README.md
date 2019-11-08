@@ -79,3 +79,55 @@ garantiza que el componente esta creado pero no que esta corriendo, no es para c
 docker-compose up
 ```
 ya no tenemos que crear una network docker-compose la crea y hace la conexión el mismo.
+```
+docker-compose up -d
+```
+corre el compose file pero no muestra el output
+```
+docker-compose ps
+```
+docker compose facilita el uso de docker, por defecto toma el nombre del directorio donde estamos parados y lo mismo pasa con el network
+```
+    Name                  Command               State           Ports
+------------------------------------------------------------------------------
+docker_app_1   docker-entrypoint.sh npx n ...   Up      0.0.0.0:3000->3000/tcp
+docker_db_1    docker-entrypoint.sh mongod      Up      27017/tcp
+
+NETWORK ID          NAME                DRIVER              SCOPE
+866bfe2347e0        bridge              bridge              local
+9603e0abcecb        docker_default      bridge              local
+```
+```
+docker-compose logs app
+```
+Ver los logs del servicio especifico
+```
+docker-compose exec app bash
+```
+ingresar al contenedor de la aplicación , nos ahorramos el comando -it
+```
+ls -lac
+```
+```
+total 144
+drwxr-xr-x   1 root root   4096 Nov  8 14:41 .
+drwxr-xr-x   1 root root   4096 Nov  8 14:41 ..
+-rw-r--r--   1 root root   1072 Nov  8 14:41 LICENSE
+drwxr-xr-x   2 root root   4096 Nov  8 14:41 build
+-rw-r--r--   1 root root    194 Nov  8 14:41 docker-compose.yml
+-rw-r--r--   1 root root    561 Nov  8 14:41 index.js
+drwxr-xr-x 242 root root  12288 Nov  8 14:41 node_modules
+-rw-r--r--   1 root root 101113 Nov  8 14:41 package-lock.json
+-rw-r--r--   1 root root    663 Nov  8 14:41 package.json
+drwxr-xr-x   2 root root   4096 Nov  8 14:41 test
+```
+**Eliminamos todos los servicios, todos los contenedores todo**
+```
+docker-compose down
+```
+```
+Stopping docker_app_1 ... done
+Stopping docker_db_1  ... done
+Removing docker_app_1 ... done
+Removing docker_db_1  ... done
+```
