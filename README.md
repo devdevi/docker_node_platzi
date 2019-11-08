@@ -66,13 +66,13 @@ services:
     image: mongo
 
 ```
-services: componentes que sirven a la totalidad de la aplicación
+- services: componentes que sirven a la totalidad de la aplicación
 los servicios pueden tener mas de un contenedor
 en el ejemplo tenemos dos servicios:
 app y db
-image: Los contenedores de este servicios van a ser iniciados a partir de la imagen mongo
-enviroment: Variables de entorno
-depends_on: Este servicio depende de otros servicios, quiere decir que. Inicia el servicio solo cuando el servicio del el cual depende esta inicializado.
+- image: Los contenedores de este servicios van a ser iniciados a partir de la imagen mongo
+- enviroment: Variables de entorno
+- depends_on: Este servicio depende de otros servicios, quiere decir que. Inicia el servicio solo cuando el servicio del el cual depende esta inicializado.
 garantiza que el componente esta creado pero no que esta corriendo, no es para controlar el orden en el cual inician los contenedores.
 
 ```
